@@ -1,10 +1,12 @@
-define([], function(){
+define(['./htmlParser'], function(htmlParser){
 	
 	var
 		tabRegExp = /<\/?\w+\s+[^>]*>/,
 		startTagRegExp = /<\w+\s+[^>]*>/gi,
 		endTagRegExp = /<\/\w*>/i,
-		commentRegExp = /(<!--(.|\s){1,}?-->)/gi;
+		commentRegExp = /(<!--(.|\s){1,}?-->)/gi,
+		attrRegExp = /([\w\-]+\s*=\s*\'[\w\s:;\-]*\')/gi;
+		//attrRegExp = /([\-A-Za-z0-9_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
 	
 	function parseOuter(html){
 		var
@@ -39,125 +41,21 @@ define([], function(){
 		};
 	}
 	
-	function htmlTextToObject(html){
+	function innerHtmlTest(html){
+		// HTML parser main function
 		var
-			result,
+			tree = htmlParser(html),
 			nodeObject;
-		do{
-			result = parseOuterTags(html);
-			html = result.html;
-		}while(result.nodeName);
 		
-		console.log('nodeObject:', nodeObject);
+		
 	}
 	
-	function createHierachy(html){
-		var
-			tags,
-			lastType,
-			iterator = -1,
-			limit = 10,
-			startTagRegExp,
-			endTagRegExp,
-			nodes = [],
-			nodeObject = {};
-			
-		function next(){
-			var o = {};
-			nodes.push(o);
-			iterator++;
-			return o;
-		}
-		function prev(){
-			iterator--;
-			return nodes[iterator];
-		}
-		function indexes(){
-			return {
-				open: html.search(startTagRegExp),
-				end: html.search(endTagRegExp)
-			};
-		}
-		
-		
-		while(html.length){
-			if(limit-- < 0){console.log('LIMIT!!');break;}
-			
-			// redeclaring RegExp
-			// how do you clear one after using it?
-			startTagRegExp = /<\/?\w+\s+[^>]*>/g,
-			endTagRegExp = /<\/\w*>/;
-				
-			html = html.trim();
-			
-			tags = indexes();
-			
-			if(tags.open === 0){
-				nodeObject = next();
-				nodeObject.innerHTML = html;
-				console.log('\nexec html:', html.length, typeof html, html);
-				console.log('searched', html.search(startTagRegExp));
-				nodeObject.opentag = startTagRegExp.exec(html);
-				console.log('opentag', nodeObject.opentag);
-				nodeObject.opentag = nodeObject.opentag[0];
-				html = html.substring(nodeObject.opentag.length, html.length);
-				console.log('new html', html);
-				lastType = 'open';
-			}
-				
-			tags = indexes();
-			
-			console.log('\nopenIndex', tags.open);
-			console.log('endIndex', tags.end);
-			
-			if(tags.open === 0){
-				// next node
-				//nodeObject = next();
-				continue;
-			}
-			
-			
-			if(tags.end > 0){
-				// inner text
-				nodeObject.innerText = html.substring(0, tags.end);
-				html = html.replace(nodeObject.innerText, '');
-				lastType = 'text';
-			}
-			
-			tags = indexes();
-			console.log('   remainder', html);
-			
-			if(tags.end === 0){
-				console.log('.....close.....');
-				// starting with a closing tag
-				if(lastType === 'close'){
-					nodeObject = prev();
-				}
-				nodeObject.closetag = endTagRegExp.exec(html);
-				nodeObject.closetag = nodeObject.closetag[0];
-				console.log('ender', nodeObject);
-				html = html.substring(nodeObject.closetag.length, html.length);
-				lastType = 'close';
-			}
-			
-			console.log('   done?', html);
-			
-			if(html.length){
-				//nodeObject = next();
-			}
-		
-		}
-		console.log('\n\n\nnodeObject', nodes.length);
-		nodes.forEach(function(n){
-			console.log(n);
-		});
-		return nodeObject;
-	}
+	
 	
 	// <div id='widget03'><div class="child"></div></div>
 	
-	global.createHierachy = createHierachy;
-	global.innerHtmlTest = htmlTextToObject;
+	//global.createHierachy = htmlParser.createHierachy;
+	global.innerHtmlTest = innerHtmlTest;
 	
 	function Node(name){
 		this.nodeName = name;
