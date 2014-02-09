@@ -33,29 +33,43 @@ define(['./innerHTML'], function(innerHTML){
 				return attributes;
 			},
 			set: function(attrs) {
+				//console.log('SET ATTRRIBUTES');
 				attributes = attrs;
 				var i, value;
 				for(i = 0; i < attributes.length; i++){
 					value = attributes[i].localValue;
+					//console.log('   ', value);
 					switch(attributes[i].localName){
 						case 'id':
-							instance.id = value;
+							this.id = value;
 							break;
 						case 'class':
-							instance.className = value;
+							this.className = value;
 							break;
 						case 'style':
-							instance.style = value;
+							this.style = value;
 					}
 				}
 			}
 		});
 	}
 	
+	function stringifyStyle(style){
+		var key, styles = '';
+		for(key in style){
+			if(style.hasOwnProperty(key)){
+				styles += (key+'='+style[key]+';');
+			}
+		}
+		console.log('stringifyStyle', styles, style);
+		return styles;
+	}
+	
 	function injectStyle(instance){
 		var style = {};
 		Object.defineProperty(instance, 'style', {
 			set: function(str){
+				
 				str = str.replace(/[\"\']/g, '');
 				var i, key, value, definitions = str.split(';');
 				for(i = 0; i < definitions.length; i++){
@@ -67,12 +81,25 @@ define(['./innerHTML'], function(innerHTML){
 						}else{
 							style[key] = value;	
 						}
-					}
-					
+					}	
 				}
+				console.log('*****set style', str, style);
 			},
 			get: function(){
 				return style;	
+			}
+		});
+	}
+	
+	function injectInnerHtml(instance){
+		var html = '';
+		Object.defineProperty(instance, 'innerHTML', {
+			get: function() {
+				return html;
+			},
+			set: function(str) {
+				html = str;
+				this.appendChild(innerHTML(str));
 			}
 		});
 	}
@@ -84,7 +111,6 @@ define(['./innerHTML'], function(innerHTML){
 	Node.prototype = {
 		nodeType:1,
 		// childNodes includes whitespace, which we are not testing
-		children:null,
 		appendChild: function(node){
 			if(this.children.length){
 				this.children[this.children.length-1].nextSibling = node;
@@ -94,18 +120,35 @@ define(['./innerHTML'], function(innerHTML){
 			this.firstChild = this.children[0];
 		},
 		firstChild:null,
-		set innerHTML(text){
-			this.html = text;
-			this.appendChild(innerHTML(text));
-		},
-		get innerHTML(){
-			return this.html || '';
+		log: function(indent){
+			if(indent === undefined){
+				indent = '';
+			}else{
+				indent += '    ';	
+			}
+			
+			var params = [], style = stringifyStyle(this.style);
+			if(this.id){
+				params.push('id='+this.id);
+			}
+			if(this.className){
+				params.push('class=' + this.className);
+			}
+			if(style){
+				params.push('style='+style);
+			}
+			
+			console.log(indent + '<' + this.nodeName, params.join(' '), '>');
+			this.children.forEach(function(child){
+				child.log(indent);
+			});
 		}
 		
 	};
 	
 	injectAttributes(Node.prototype);
 	injectStyle(Node.prototype);
+	injectInnerHtml(Node.prototype);
 		
 	global.Node = Node;
 	

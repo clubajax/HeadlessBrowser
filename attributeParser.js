@@ -2,9 +2,11 @@ define([], function(){
 	
 	var
 		// handle single quotes, may be contain double quotes
-		posAttrRegExp = /([\w\-]+\s*=\s*\'[\w\s:;\-\"]*\')/gi,
+		posAttrRegExp = /([\w\-]+\s*=\s*\'[\w\s:;#\-\"]*\')/gi,
+		
 		// handle double quotes, may be contain single quotes
 		negAttrRegExp = /([\w\-]+\s*=\s*\"[\w\s:;\-\']*\")/gi,
+		
 		// handle no quotes - value maybe be alpha-numeric
 		// string, boolean or number (no quotes or dashes)
 		nonAttrRegExp = /([\w\-]+\s*=\s*[\w]*)/gi;

@@ -1,4 +1,4 @@
-define(['./Node'], function(Node){
+define(['./createElement'], function(createElement){
 	
 	if(!global.document){
 		// singleton
@@ -6,11 +6,11 @@ define(['./Node'], function(Node){
 			getElementById: function(id){
 				return null;
 			},
-			createElement: function(nodeName){
-				return new Node(nodeName);
-			},
-			body: (new Node('body'))
+			createElement: createElement,
+			body: null
 		};
+		
+		global.document.body = createElement('body');
 	}
 	
 });

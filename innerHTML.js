@@ -5,15 +5,20 @@ define([
 	
 	return function (html){
 		
+		if(html.trim().indexOf('<') !== '<'){
+			// just text
+			return html;
+		}
+		
 		var
-			Node = global.Node,
+			createElement = global.createElement,
 			tree = htmlToHierarchy(html),
 			nodeObject;
 			
 		function createNode(opentag){
 			var
 				attrs = attributeParser(opentag),
-				node = new Node(opentag.substring(1,opentag.indexOf(' ')));
+				node = createElement(opentag.substring(1,opentag.indexOf(' ')));
 			
 			node.attributes = attrs;
 			
@@ -36,9 +41,9 @@ define([
 		nodeObject = walkTree(tree);
 		
 		//console.log('tree', tree);
-		console.log('\n\nnodeObject:', nodeObject);
-		console.log('attrs:', nodeObject.attributes);
-		console.log('style:', nodeObject.style);
+		//console.log('\n\nnodeObject:', nodeObject);
+		//console.log('attrs:', nodeObject.attributes);
+		//console.log('style:', nodeObject.style);
 		
 		return nodeObject;
 	};

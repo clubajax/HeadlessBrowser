@@ -18,7 +18,8 @@ define([], function(){
 			id = 0,
 			//commentRegExp = /(<!--(.|\s){1,}?-->)/gi,
 			startTagRegExp = /<\/?\w+\s+[^>]*>/g,
-			endTagRegExp = /<\/\w*>/;
+			endTagRegExp = /<\/\w*>/,
+			newlineRegExp = /[\n\t]/g;
 			
 		function uid(){
 			return 'n-' + (id++);
@@ -65,13 +66,14 @@ define([], function(){
 			startTagRegExp.lastIndex = 0;
 			endTagRegExp.lastIndex = 0;
 				
-			html = html.trim();
+			html = html.trim().replace(newlineRegExp, '');
 			
 			tags = indexes();
 			
 			if(tags.open === 0){
 				nodeObject = getChild();
 				nodeObject.opentag = startTagRegExp.exec(html);
+				//console.log('openttage', nodeObject.opentag[0]);
 				nodeObject.opentag = nodeObject.opentag[0];
 				html = html.substring(nodeObject.opentag.length, html.length);
 				lastType = 'open';
@@ -87,6 +89,7 @@ define([], function(){
 			if(tags.end > 0){
 				// inner text
 				nodeObject.innerText = html.substring(0, tags.end);
+				//console.log('  text', nodeObject.innerText);
 				html = html.replace(nodeObject.innerText, '');
 				lastType = 'text';
 			}
