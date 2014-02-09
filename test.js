@@ -24,13 +24,16 @@ define([
 		
 		
 		// two siblings, attributes:
-		//createHierachy("<div class='p1 dark mode' id='p' style='display:block;'><div class='c1'>text 1</chld1><div class='c2'>text2</chld2></prnt>");
+		document.body.innerHTML = "<div class='p1 dark mode' id='p' style='display:block;'><div class='c1'>text 1</chld1><div class='c2'>text2</chld2></prnt>";
 		
 		
-		innerHtmlTest("<div class='p1 dark mode' id='p' style='display:block;'><div class='c1'>text 1</chld1><div class='c2'>text2</chld2></prnt>");
+		//innerHtmlTest("<div class='p1 dark mode' id='p' style='display:block;'><div class='c1'>text 1</chld1><div class='c2'>text2</chld2></prnt>");
 		
 		// one node, attributes
 		//innerHtmlTest("<div class='p1 dark mode' id='p' style='display:block;'></div>");
+		
+		// one node, attributes, opposite quotes
+		//document.body.innerHTML = '<div class="p1 dark mode\'s" width=400 disabled=true id="testNode" style="display:block;"></div>';
 		
 		
 		//createHierachy("<div class='child'></div></div>");

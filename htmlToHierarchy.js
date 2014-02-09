@@ -1,6 +1,11 @@
 define([], function(){
 
-	function htmlToHierarchy(html){
+	return function (html){
+		// key method
+		// Converts an HTML string into one node object
+		// with a hierarchy of children.
+		// The result is still in string form but broken into
+		// the proper structure
 		var
 			tags,
 			lastType,
@@ -11,6 +16,7 @@ define([], function(){
 			nodeObject = {},
 			current,
 			id = 0,
+			//commentRegExp = /(<!--(.|\s){1,}?-->)/gi,
 			startTagRegExp = /<\/?\w+\s+[^>]*>/g,
 			endTagRegExp = /<\/\w*>/;
 			
@@ -73,14 +79,10 @@ define([], function(){
 				
 			tags = indexes();
 			
-			console.log('\nopenIndex', tags.open);
-			console.log('endIndex', tags.end);
-			
 			if(tags.open === 0){
 				// next node
 				continue;
 			}
-			
 			
 			if(tags.end > 0){
 				// inner text
@@ -98,7 +100,6 @@ define([], function(){
 				}
 				nodeObject.closetag = endTagRegExp.exec(html);
 				nodeObject.closetag = nodeObject.closetag[0];
-				console.log('ender', nodeObject);
 				html = html.substring(nodeObject.closetag.length, html.length);
 				lastType = 'close';
 				
@@ -107,14 +108,12 @@ define([], function(){
 			
 		
 		}
-		console.log('\n\n\n TREE PARSED', nodes.length);
-		nodes.forEach(function(n){
-			console.log(n);
-		});
-		console.log('\n\n\n');
+		//console.log('\n\n\n TREE PARSED', nodes.length);
+		//nodes.forEach(function(n){
+		//	console.log(n);
+		//});
+		//console.log('\n\n\n');
 		return nodes[0];
-	}
-	
-	return htmlToHierarchy;
+	};
 	
 });
