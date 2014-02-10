@@ -5,8 +5,9 @@ define([
 	
 	return function (html){
 		
-		if(html.trim().indexOf('<') !== '<'){
+		if(html.trim().indexOf('<') !== 0){
 			// just text
+			console.log('JUST TEXT');
 			return html;
 		}
 		
@@ -30,9 +31,13 @@ define([
 				i,
 				node = createNode(branch.opentag);
 			
+			if(branch.innerText){
+				node.textContent = branch.innerText;
+			}
+			
 			if(branch.children && branch.children.length){
 				for(i = 0; i < branch.children.length; i++){
-					node.children.push(walkTree(branch.children[i]));
+					node.appendChild(walkTree(branch.children[i]));
 				}
 			}
 			return node;

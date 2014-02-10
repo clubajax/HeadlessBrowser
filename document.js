@@ -4,7 +4,9 @@ define(['./createElement'], function(createElement){
 		// singleton
 		global.document = {
 			getElementById: function(id){
-				return null;
+				//console.log('getElementById', id);
+				//console.log('nodeMap', createElement.nodeMap);
+				return createElement.nodeMap[id];
 			},
 			createElement: createElement,
 			body: null

@@ -1,5 +1,14 @@
 define(['./innerHTML'], function(innerHTML){
 	
+	var
+		refid = 0,
+		refMap = {},
+		nodeMap = {};
+		
+	function uid(){
+		return 'ref-' + (refid++);
+	}
+	
 	function stringifyStyle(style){
 		var key, styles = '';
 		for(key in style){
@@ -15,7 +24,9 @@ define(['./innerHTML'], function(innerHTML){
 		var
 			element,
 			html = '',
+			cssText = '',
 			style = {},
+			refId = uid(),
 			attributes = [];
 		
 		element = {
@@ -34,6 +45,10 @@ define(['./innerHTML'], function(innerHTML){
 				}
 				this.children.push(node);
 				this.firstChild = this.children[0];
+				if(node.id){
+					nodeMap[node.id] = node;
+				}
+				refMap[refId] = node;
 			},
 			
 			setAttribute: function(key, value){
@@ -116,8 +131,8 @@ define(['./innerHTML'], function(innerHTML){
 		
 		Object.defineProperty(element, 'style', {
 			set: function(str){
-				
-				str = str.replace(/[\"\']/g, '');
+				str = str.replace(/[\"\'\s]/g, '');
+				cssText = str;
 				var i, key, value, definitions = str.split(';');
 				for(i = 0; i < definitions.length; i++){
 					if(definitions[i]){
@@ -130,18 +145,28 @@ define(['./innerHTML'], function(innerHTML){
 						}
 					}	
 				}
-				console.log('*****set style', str, style);
 			},
 			get: function(){
 				return style;	
 			}
 		});
 		
+		
+		Object.defineProperty(element, 'cssText', {
+			set: function(str){
+				this.style = str;
+			},
+			get: function(){
+				return cssText;	
+			}
+		});
+		
 		Object.defineProperty(element, 'innerHTML', {
 			get: function() {
-				return html;
+				return html || this.textContent;
 			},
 			set: function(str) {
+				
 				if(this.children.length){
 					this.children.length = 0;
 				}
@@ -150,13 +175,16 @@ define(['./innerHTML'], function(innerHTML){
 				if(typeof node === 'string'){
 					this.textContent = html;
 				}else{
-					this.appendChild();
+					this.appendChild(node);
 				}
 			}
 		});
 		
 		return element;
 	}
+	
+	createElement.nodeMap = nodeMap;
+	createElement.refMap = refMap;
 	
 	global.createElement = createElement;
 	

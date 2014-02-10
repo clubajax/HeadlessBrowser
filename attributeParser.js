@@ -28,6 +28,16 @@ define([], function(){
 		}
 	}
 	
+	function stripQuotes(str){
+		if(str.indexOf('"') === 0){
+			return str.substring(1, str.length - 1);
+		}
+		if(str.indexOf("'") === 0){
+			return str.substring(1, str.length - 1);
+		}
+		return str;
+	}
+	
 	function normalize(str){
 		// normalize value to boolean, number or string
 		if(str === 'null' || str === null || str === ''){
@@ -43,7 +53,7 @@ define([], function(){
 		if(!isNaN(+str)){
 			return +str;
 		}
-		return str;
+		return stripQuotes(str);
 	}
 	
 	function attsToObject(attPairs){
