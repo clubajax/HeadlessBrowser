@@ -101,7 +101,7 @@ define([
 		}
 		
 		function doubleQuotes(t){
-			// one node, attributes, opposite quotes
+			// one node, attributes, double-quotes and an apostrophe
 			document.body.innerHTML = '<div id="p1" class="p1 dark mode\'s" width=400 disabled=true style="display:block;"></div>';
 			document.body.log();
 			var node = byId('p1');
