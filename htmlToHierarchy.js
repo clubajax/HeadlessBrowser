@@ -9,7 +9,7 @@ define([], function(){
 		var
 			tags,
 			lastType,
-			limit = 10,
+			limit = 30,
 			nodes = [],
 			nodeObject = {},
 			current,
@@ -72,7 +72,7 @@ define([], function(){
 			endTagRegExp.lastIndex = 0;
 				
 			html = html.trim().replace(newlineRegExp, '');
-			
+			//console.log('html ', html );
 			tags = indexes();
 			
 			if(tags.open === 0){

@@ -40,7 +40,12 @@ define([
 			
 			if(branch.children && branch.children.length){
 				for(i = 0; i < branch.children.length; i++){
-					node.appendChild(walkTree(branch.children[i]));
+					if(branch.children[i].opentag.indexOf('</') === -1){
+						node.appendChild(walkTree(branch.children[i]));
+					}/*else{
+						console.log(' child', branch.children[i]);
+					
+					}*/
 				}
 			}
 			return node;

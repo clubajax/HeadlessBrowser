@@ -27,7 +27,18 @@ define(['./innerHTML'], function(innerHTML){
 		return styles;
 	}
 	
+	function stringifyAttributes(atts){
+		var params = [];
+		atts.forEach(function(a){
+			if(a.localName !== 'id'){
+				params.push(a.localName+'='+a.localValue);
+			}
+		});
+		return params.join(' ');
+	}
+	
 	function createElement(nodeName){
+		//console.log('createElement', nodeName);
 		var
 			element,
 			html = '',
@@ -35,12 +46,6 @@ define(['./innerHTML'], function(innerHTML){
 			style = {},
 			attributes = [],
 			refId = uid();
-		
-		attributes.item = function(i){
-			return attributes[i];
-		};
-		
-		attributes.FOO = 'BAR';
 		
 		element = {
 			nodeName: nodeName,
@@ -66,15 +71,24 @@ define(['./innerHTML'], function(innerHTML){
 				refMap[refId] = node;
 			},
 			
-			replaceChild: function(newNode, oldNode){
-				for(var i = 0; i < this.children.length; i++){
+			replaceChild: function(node, oldNode){
+				var i, found;
+				for(i = 0; i < this.children.length; i++){
 					if(this.children[i] === oldNode){
-						this.children[i] = newNode;
-						return this;
+						this.children[i] = node;
+						found = 1;
 					}
 				}
-				// oh well, screw it...
-				this.children.push(newNode);
+				if(!found){
+					// oh well, screw it...
+					this.children.push(node);
+				}
+				this.firstChild = this.children[0];
+				if(node.id){
+					nodeMap[node.id] = node;
+				}
+				node.parentNode = this;
+				refMap[refId] = node;
 				return this;
 			},
 			
@@ -114,7 +128,10 @@ define(['./innerHTML'], function(innerHTML){
 					indent += '    ';	
 				}
 				
-				var params = [], style = stringifyStyle(this.style);
+				var
+					params = [],
+					style = stringifyStyle(this.style),
+					atts = stringifyAttributes(this.attributes);
 				if(this.id){
 					params.push('id='+this.id);
 				}
@@ -124,7 +141,9 @@ define(['./innerHTML'], function(innerHTML){
 				if(style){
 					params.push('style='+style);
 				}
-				
+				if(atts){
+					params.push(atts);
+				}
 				console.log(indent + '<' + this.nodeName, params.join(' '), '>');
 				if(this.textContent){
 					console.log(indent + '    ' + this.textContent);

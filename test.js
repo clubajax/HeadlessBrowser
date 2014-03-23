@@ -107,6 +107,23 @@ define([
 			t.assert(node.getAttribute('title') === 'Child One' && node.nextSibling.getAttribute('title') === 'Child Two');
 		}
 		
+		function dataAttributes(t){
+			// two siblings, attributes:
+			document.body.innerHTML = "<div id='widget01' data-widget='ParentWidget'>" +
+												"<div data-widget='ChildWidget'>" +
+													"<div data-widget='GrandChildWidget' data-props='displayText:Grand Child Widget!'></div>" +
+												"</div>" +
+											"</div>";
+			document.body.log();
+			console.log('chillen', document.body.firstChild.firstChild.firstChild.log());
+			
+			//var node = byId('p1').firstChild;
+			//t.assert(node.getAttribute('title') === 'Child One' && node.nextSibling.getAttribute('title') === 'Child Two');
+		}
+		
+		
+		
+		
 		function doubleQuotes(t){
 			// one node, attributes, double-quotes and an apostrophe
 			document.body.innerHTML = '<div id="p1" class="p1 dark mode\'s" width=400 disabled=true style="display:block;"></div>';
@@ -138,7 +155,7 @@ define([
 	return {
 		suiteName: suiteName,
 		tests:[
-			{
+			/*{
 				title:'Dumb Simple Node',
 				run: dumbSimpleNode
 			},{
@@ -177,7 +194,11 @@ define([
 			},{
 				title:'Double Quotes Attributes Test',
 				run: doubleQuotes
-			},{
+			},*/{
+				title:'Data Attributes Test',
+				run: dataAttributes
+			},
+			{
 				title:'Text Only',
 				run: textOnly
 			}/*,{
