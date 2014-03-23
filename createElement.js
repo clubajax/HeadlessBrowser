@@ -3,7 +3,14 @@ define(['./innerHTML'], function(innerHTML){
 	var
 		refid = 0,
 		refMap = {},
-		nodeMap = {};
+		nodeMap = {},
+		attProps = {
+			id:1,
+			title:1,
+			tabIndex:1,
+			href:1,
+			src:1
+		};
 		
 	function uid(){
 		return 'ref-' + (refid++);
@@ -65,6 +72,9 @@ define(['./innerHTML'], function(innerHTML){
 						localName:key,
 						localValue:value
 					});
+				}
+				if(attProps[key]){
+					this[key] = value;
 				}
 			},
 			getAttribute: function(key){
