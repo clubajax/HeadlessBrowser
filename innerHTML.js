@@ -7,7 +7,6 @@ define([
 		
 		if(html.trim().indexOf('<') !== 0){
 			// just text
-			console.log('JUST TEXT');
 			return html;
 		}
 		
@@ -17,9 +16,13 @@ define([
 			nodeObject;
 			
 		function createNode(opentag){
+			//console.log('createNode', opentag);
 			var
 				attrs = attributeParser(opentag),
-				node = createElement(opentag.substring(1,opentag.indexOf(' ')));
+				nodeName = opentag.indexOf(' ')>-1 ?
+					opentag.substring(1,opentag.indexOf(' ')) :
+					opentag.substring(1,opentag.indexOf('>')),
+				node = createElement(nodeName);
 			
 			node.attributes = attrs;
 			

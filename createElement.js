@@ -33,13 +33,20 @@ define(['./innerHTML'], function(innerHTML){
 			html = '',
 			cssText = '',
 			style = {},
-			refId = uid(),
-			attributes = [];
+			attributes = [],
+			refId = uid();
+		
+		attributes.item = function(i){
+			return attributes[i];
+		};
+		
+		attributes.FOO = 'BAR';
 		
 		element = {
 			nodeName: nodeName,
 			nodeType:1,
 			children:[],
+			attributes: attributes,
 			textContent:'',
 			firstChild:null,
 			parentNode:null,

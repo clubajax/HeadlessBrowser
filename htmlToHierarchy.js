@@ -10,17 +10,18 @@ define([], function(){
 			tags,
 			lastType,
 			limit = 10,
-			startTagRegExp,
-			endTagRegExp,
 			nodes = [],
 			nodeObject = {},
 			current,
 			id = 0,
 			//commentRegExp = /(<!--(.|\s){1,}?-->)/gi,
-			startTagRegExp = /<\/?\w+\s+[^>]*>/g,
+			startTagRegExp = /<\/?\w+[^>]*>|<\w+>/g,
+			//startTagRegExp = /<\w+>/g,
 			endTagRegExp = /<\/\w*>/,
 			newlineRegExp = /[\n\t]/g;
 			
+		//console.log('  ---- html', html);
+		
 		function uid(){
 			return 'n-' + (id++);
 		}
@@ -36,10 +37,13 @@ define([], function(){
 				o.parentId = current.id;
 			}
 			current = o;
+			//console.log('   c-current', current);
 			return current;
 		}
 		
 		function getParent(){
+			//if(!current){ current = document.body; }
+			//if(!current){ return null; }
 			if(current.parentId){
 				for(var i = 0; i < nodes.length; i++){
 					if(nodes[i].id === current.parentId){
@@ -48,6 +52,7 @@ define([], function(){
 					}
 				}
 			}
+			//console.log('   p-current', current);
 			return current;
 		}
 		
@@ -73,7 +78,7 @@ define([], function(){
 			if(tags.open === 0){
 				nodeObject = getChild();
 				nodeObject.opentag = startTagRegExp.exec(html);
-				//console.log('openttage', nodeObject.opentag[0]);
+				//console.log('openttag', nodeObject.opentag[0]);
 				nodeObject.opentag = nodeObject.opentag[0];
 				html = html.substring(nodeObject.opentag.length, html.length);
 				lastType = 'open';
@@ -105,7 +110,7 @@ define([], function(){
 				nodeObject.closetag = nodeObject.closetag[0];
 				html = html.substring(nodeObject.closetag.length, html.length);
 				lastType = 'close';
-				
+				//console.log('closetag', nodeObject.closetag);
 				nodeObject = getParent();
 			}
 			

@@ -8,6 +8,13 @@ define([
 	var
 		suiteName = 'Headless Browser';
 	
+		function dumbSimpleNode(t){
+			// simple node:
+			document.body.innerHTML = '<div>dumb simple</div>';
+			document.body.log();
+			t.assert(document.body.children.length === 1);
+		}
+		
 		function simpleNode(t){
 			// simple node:
 			document.body.innerHTML = '<div class="test" id="test">inner text</div>';
@@ -116,22 +123,25 @@ define([
 			t.assert(document.body.innerHTML === 'There is only text');
 		}
 		
-		function loadHtml(t){
-			// from execution dir in command line
-			var snippet = browser.loadFile('./HeadlessBrowser/domTest.html');
-			//console.log('snippet', snippet);
-			document.body.innerHTML = snippet;
-			document.body.log();
-			
-			t.assert(byId('widget01').style.color === '#ff0000');
-			t.assert(byId('wrapper').className === 'child');
-			t.assert(byId('wrapper').firstChild.textContent === 'span text');
-		}
+		//function loadHtml(t){
+		//	// from execution dir in command line
+		//	var snippet = browser.loadFile('base/rtests/HeadlessBrowser/domTest.html');
+		//	//console.log('snippet', snippet);
+		//	document.body.innerHTML = snippet;
+		//	document.body.log();
+		//	
+		//	t.assert(byId('widget01').style.color === '#ff0000');
+		//	t.assert(byId('wrapper').className === 'child');
+		//	t.assert(byId('wrapper').firstChild.textContent === 'span text');
+		//}
 		
 	return {
 		suiteName: suiteName,
 		tests:[
 			{
+				title:'Dumb Simple Node',
+				run: dumbSimpleNode
+			},{
 				title:'Simple Node',
 				run: simpleNode
 			},{
@@ -170,10 +180,10 @@ define([
 			},{
 				title:'Text Only',
 				run: textOnly
-			},{
+			}/*,{
 				title:'Load External HTML',
 				run: loadHtml
-			}
+			}*/
 		]
 	};
 	
