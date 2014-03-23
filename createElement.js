@@ -62,7 +62,20 @@ define(['./innerHTML'], function(innerHTML){
 				if(node.id){
 					nodeMap[node.id] = node;
 				}
+				node.parentNode = this;
 				refMap[refId] = node;
+			},
+			
+			replaceChild: function(newNode, oldNode){
+				for(var i = 0; i < this.children.length; i++){
+					if(this.children[i] === oldNode){
+						this.children[i] = newNode;
+						return this;
+					}
+				}
+				// oh well, screw it...
+				this.children.push(newNode);
+				return this;
 			},
 			
 			setAttribute: function(key, value){
