@@ -42,10 +42,7 @@ define([
 				for(i = 0; i < branch.children.length; i++){
 					if(branch.children[i].opentag.indexOf('</') === -1){
 						node.appendChild(walkTree(branch.children[i]));
-					}/*else{
-						console.log(' child', branch.children[i]);
-					
-					}*/
+					}
 				}
 			}
 			return node;

@@ -46,7 +46,7 @@ define([
 		
 		function siblings(t){
 			// two siblings:
-			document.body.innerHTML = "<div id='p1'><div class='c1'>text 1</chld1><div class='c2'>text 2</chld2></prnt>";
+			document.body.innerHTML = "<div><div id='p1'><div class='c1'>text 1</chld1><div class='c2'>text 2</chld2></prnt></div>";
 			document.body.log();
 			t.assert(byId('p1').firstChild.textContent === 'text 1' && byId('p1').firstChild.nextSibling.textContent === 'text 2');
 		}
@@ -155,7 +155,7 @@ define([
 	return {
 		suiteName: suiteName,
 		tests:[
-			/*{
+			{
 				title:'Dumb Simple Node',
 				run: dumbSimpleNode
 			},{
@@ -194,7 +194,7 @@ define([
 			},{
 				title:'Double Quotes Attributes Test',
 				run: doubleQuotes
-			},*/{
+			},{
 				title:'Data Attributes Test',
 				run: dataAttributes
 			},

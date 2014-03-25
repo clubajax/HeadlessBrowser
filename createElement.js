@@ -30,7 +30,7 @@ define(['./innerHTML'], function(innerHTML){
 	function stringifyAttributes(atts){
 		var params = [];
 		atts.forEach(function(a){
-			if(a.localName !== 'id'){
+			if(a.localName !== 'id' && a.localName !== 'class'){
 				params.push(a.localName+'='+a.localValue);
 			}
 		});
@@ -122,7 +122,10 @@ define(['./innerHTML'], function(innerHTML){
 			},
 			
 			log: function(indent){
-				if(indent === undefined){
+				if(indent && indent.substring(0, 1) !== ' '){
+					console.log(indent);
+					indent = '';
+				}else if(indent === undefined){
 					indent = '';
 				}else{
 					indent += '    ';	
@@ -131,7 +134,8 @@ define(['./innerHTML'], function(innerHTML){
 				var
 					params = [],
 					style = stringifyStyle(this.style),
-					atts = stringifyAttributes(this.attributes);
+					atts = stringifyAttributes(this.attributes),
+					text = this.textContent || '';
 				if(this.id){
 					params.push('id='+this.id);
 				}
@@ -144,10 +148,8 @@ define(['./innerHTML'], function(innerHTML){
 				if(atts){
 					params.push(atts);
 				}
-				console.log(indent + '<' + this.nodeName, params.join(' '), '>');
-				if(this.textContent){
-					console.log(indent + '    ' + this.textContent);
-				}
+				console.log(indent + '<' + this.nodeName, params.join(' '), '> ' + text);
+				
 				this.children.forEach(function(child){
 					child.log(indent);
 				});

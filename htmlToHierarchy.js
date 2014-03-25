@@ -16,11 +16,13 @@ define([], function(){
 			id = 0,
 			//commentRegExp = /(<!--(.|\s){1,}?-->)/gi,
 			startTagRegExp = /<\/?\w+[^>]*>|<\w+>/g,
-			//startTagRegExp = /<\w+>/g,
 			endTagRegExp = /<\/\w*>/,
+			closedTagRegExp = /<[^\/]\w+[^>]*><\/\w*>/,
 			newlineRegExp = /[\n\t]/g;
 			
-		//console.log('  ---- html', html);
+		function log(){
+			//console.log.apply(console, arguments);	
+		}
 		
 		function uid(){
 			return 'n-' + (id++);
@@ -42,8 +44,6 @@ define([], function(){
 		}
 		
 		function getParent(){
-			//if(!current){ current = document.body; }
-			//if(!current){ return null; }
 			if(current.parentId){
 				for(var i = 0; i < nodes.length; i++){
 					if(nodes[i].id === current.parentId){
@@ -57,10 +57,13 @@ define([], function(){
 		}
 		
 		function indexes(){
-			return {
+			var tags = {
 				open: html.search(startTagRegExp),
-				end: html.search(endTagRegExp)
+				end: html.search(endTagRegExp),
+				closed: html.search(closedTagRegExp)
 			};
+			log('    tags', tags.open, tags.end, tags.closed);
+			return tags;
 		}
 		
 		
@@ -72,31 +75,48 @@ define([], function(){
 			endTagRegExp.lastIndex = 0;
 				
 			html = html.trim().replace(newlineRegExp, '');
-			//console.log('html ', html );
+			
+			log('html ', html );
 			tags = indexes();
 			
 			if(tags.open === 0){
 				nodeObject = getChild();
 				nodeObject.opentag = startTagRegExp.exec(html);
-				//console.log('openttag', nodeObject.opentag[0]);
+				log('    openttag', nodeObject.opentag[0]);
 				nodeObject.opentag = nodeObject.opentag[0];
 				html = html.substring(nodeObject.opentag.length, html.length);
 				lastType = 'open';
 			}
-				
+			
+			if(tags.closed === 0){
+				log('CLOSED TAG', html);
+				nodeObject.closetag = endTagRegExp.exec(html);
+				nodeObject.closetag = nodeObject.closetag[0];
+				html = html.substring(nodeObject.closetag.length, html.length);
+				lastType = 'close';
+				log('    closetag', nodeObject.closetag);
+				nodeObject = getParent();
+				continue;
+			}
+			
+			log('    -- cont html', html);
 			tags = indexes();
 			
 			if(tags.open === 0){
 				// next node
+				log('        cont...');
 				continue;
 			}
 			
 			if(tags.end > 0){
 				// inner text
+				log('    tags.end');
 				nodeObject.innerText = html.substring(0, tags.end);
-				//console.log('  text', nodeObject.innerText);
+				log('      text', nodeObject.innerText);
 				html = html.replace(nodeObject.innerText, '');
 				lastType = 'text';
+			}else{
+				log('    tags.end', tags.end);
 			}
 			
 			tags = indexes();
@@ -110,17 +130,17 @@ define([], function(){
 				nodeObject.closetag = nodeObject.closetag[0];
 				html = html.substring(nodeObject.closetag.length, html.length);
 				lastType = 'close';
-				//console.log('closetag', nodeObject.closetag);
+				log('    closetag', nodeObject.closetag);
 				nodeObject = getParent();
 			}
 			
 		
 		}
-		//console.log('\n\n\n TREE PARSED', nodes.length);
+		//log('\n\n\n TREE PARSED', nodes.length);
 		//nodes.forEach(function(n){
-		//	console.log(n);
+		//	log(n);
 		//});
-		//console.log('\n\n\n');
+		//log('\n\n\n');
 		return nodes[0];
 	};
 	
