@@ -39,6 +39,7 @@ define(['./innerHTML'], function(innerHTML){
 	
 	function createElement(nodeName){
 		//console.log('createElement', nodeName);
+		nodeName = nodeName.toUpperCase();
 		var
 			element,
 			html = '',
@@ -80,6 +81,7 @@ define(['./innerHTML'], function(innerHTML){
 					}
 				}
 				if(!found){
+					console.log('not found');
 					// oh well, screw it...
 					this.children.push(node);
 				}
@@ -157,6 +159,7 @@ define(['./innerHTML'], function(innerHTML){
 		};
 		
 		Object.defineProperty(element, 'attributes', {
+			
 			get: function() {
 				return attributes;
 			},
@@ -165,7 +168,6 @@ define(['./innerHTML'], function(innerHTML){
 				var i, value;
 				for(i = 0; i < attributes.length; i++){
 					value = attributes[i].localValue;
-					//console.log('   ', value);
 					switch(attributes[i].localName){
 						case 'id':
 							this.id = value;

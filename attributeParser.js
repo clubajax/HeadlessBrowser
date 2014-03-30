@@ -2,7 +2,7 @@ define([], function(){
 	
 	var
 		// handle single quotes, may be contain double quotes
-		posAttrRegExp = /([\w\-]+\s*=\s*\'[\w\s:;#\-\"]*\')/gi,
+		posAttrRegExp = /([\w\-]+\s*=\s*\'[\w\s:;#!\?@$\-\"]*\')/gi,
 		
 		// handle double quotes, may be contain single quotes
 		negAttrRegExp = /([\w\-]+\s*=\s*\"[\w\s:;\-\']*\")/gi,
@@ -73,7 +73,7 @@ define([], function(){
 				});
 			}
 		}
-		//console.log('attrs:', attrs);
+		
 		return attrs;
 	}
 	
@@ -90,8 +90,6 @@ define([], function(){
 		regExpMatch(opentag, posAttrRegExp, attPairs);
 		regExpMatch(opentag, negAttrRegExp, attPairs);
 		regExpMatch(opentag, nonAttrRegExp, attPairs);
-		
-		//console.log('attPairs', attPairs);
 		
 		return attsToObject(attPairs);
 		
