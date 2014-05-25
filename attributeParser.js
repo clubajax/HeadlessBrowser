@@ -73,7 +73,7 @@ define([], function(){
 				});
 			}
 		}
-		console.log('attrs', attrs);
+		//console.log('attrs', attrs);
 		return attrs;
 	}
 	

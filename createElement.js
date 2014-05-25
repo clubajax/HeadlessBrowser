@@ -46,6 +46,7 @@ define(['./innerHTML'], function(innerHTML){
 			cssText = '',
 			style = {},
 			attributes = [],
+			listeners = {},
 			refId = uid();
 		
 		element = {
@@ -58,6 +59,18 @@ define(['./innerHTML'], function(innerHTML){
 			parentNode:null,
 			nextSibling:null,
 			previousSibling:null,
+			addEventListener: function(eventName, callback){
+				listeners[eventName] = listeners[eventName] || [];
+				listeners[eventName].push(callback);
+			},
+			dispatchEvent: function(event){
+				var eventName = event.eventName || event;
+				if(listeners[eventName] && listeners[eventName].length){
+					listeners[eventName].forEach(function(callback){
+						callback({}); // args? fake event? target?
+					});
+				}
+			},
 			appendChild: function(node){
 				if(this.children.length){
 					this.children[this.children.length-1].nextSibling = node;
@@ -121,6 +134,10 @@ define(['./innerHTML'], function(innerHTML){
 					}
 				}
 				return null;
+			},
+			
+			toString: function(){
+				return '[object HTMLDivElement]';
 			},
 			
 			log: function(indent){

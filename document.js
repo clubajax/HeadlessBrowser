@@ -26,6 +26,9 @@ define(['./createElement'], function(createElement){
 				//return byId(null, id);
 				return createElement.nodeMap[id];
 			},
+			toString: function(){
+				return '[object HTMLDocument]';
+			},
 			createElement: createElement,
 			body: null
 		};

@@ -8,6 +8,9 @@ define([], function(){
 		global.window = {
 			getComputedStyle: function(node){
 				return node ? node.style ? node.style : {} : {};
+			},
+			toString: function(){
+				return '[object global]';
 			}
 		};
 		
